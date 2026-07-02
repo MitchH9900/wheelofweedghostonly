@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#07160d" />
+  <title>Wheel of Weed — Ghost Mode</title>
+  <style>
+    :root {
+      --ink: #061009;
+      --deep: #09170d;
+      --green: #46c85a;
+      --lime: #b7ff64;
+      --white: #fffdf2;
+      --mist: #d7f4d7;
+      --acid: #9eff40;
+      --purple: #a766ff;
+      --violet: #51217e;
+      --red: #ff4e68;
+      --line: #143c20;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--ink); }
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--white);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 50% -8%, rgba(158,255,64,.26), transparent 27rem),
+        radial-gradient(circle at 14% 36%, rgba(167,102,255,.16), transparent 24rem),
+        radial-gradient(circle at 88% 72%, rgba(70,200,90,.17), transparent 27rem),
+        linear-gradient(145deg, #07150c 0%, #061009 52%, #0b1810 100%);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -4;
+      opacity: .18;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 38px 38px;
+      mask-image: radial-gradient(circle at center, black, transparent 77%);
+    }
+
+    .smoke {
+      position: fixed;
+      z-index: -3;
+      width: 46vw;
+      min-width: 320px;
+      aspect-ratio: 1;
+      border-radius: 48% 52% 65% 35% / 55% 42% 58% 45%;
+      opacity: .2;
+      filter: blur(31px);
+      pointer-events: none;
+      mix-blend-mode: screen;
+      background:
+        radial-gradient(circle at 36% 39%, rgba(240,255,238,.75) 0 4%, transparent 5%),
+        radial-gradient(circle at 58% 44%, rgba(183,255,100,.52) 0 11%, transparent 28%),
+        radial-gradient(circle at 45% 60%, rgba(167,102,255,.48) 0 10%, transparent 36%),
+        radial-gradient(circle at 69% 60%, rgba(255,255,255,.5) 0 5%, transparent 25%);
+    }
+    .smoke.one { left: -15vw; top: 5vh; animation: driftLeft 17s ease-in-out infinite alternate; }
+    .smoke.two { right: -19vw; bottom: -12vh; transform: rotate(140deg) scale(.92); animation: driftRight 20s ease-in-out infinite alternate; }
+    .smoke.three { left: 28vw; bottom: -27vh; width: 39vw; opacity: .12; animation: rise 16s ease-in-out infinite alternate; }
+    @keyframes driftLeft { to { transform: translate(12vw, 8vh) rotate(22deg) scale(1.13); } }
+    @keyframes driftRight { to { transform: translate(-13vw, -10vh) rotate(88deg) scale(1.12); } }
+    @keyframes rise { to { transform: translate(-8vw, -25vh) rotate(-22deg) scale(1.08); } }
+
+    .ghost {
+      position: fixed;
+      z-index: -1;
+      width: clamp(62px, 9vw, 128px);
+      opacity: .14;
+      pointer-events: none;
+      filter: drop-shadow(0 0 14px rgba(183,255,100,.45));
+      animation: float 7s ease-in-out infinite;
+    }
+    .ghost.g1 { left: 6vw; top: 16vh; transform: rotate(-10deg); }
+    .ghost.g2 { right: 7vw; top: 15vh; width: clamp(50px, 7vw, 110px); animation-delay: -2.2s; }
+    .ghost.g3 { left: 11vw; bottom: 8vh; width: clamp(48px, 6vw, 96px); animation-delay: -4.4s; }
+    .ghost.g4 { right: 12vw; bottom: 10vh; width: clamp(72px, 8vw, 118px); animation-delay: -5.5s; }
+    @keyframes float {
+      0%, 100% { translate: 0 0; rotate: -2deg; }
+      50% { translate: 0 -20px; rotate: 4deg; }
+    }
+
+    .app {
+      width: min(940px, 100%);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: clamp(18px, 4vw, 42px) 17px 34px;
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: clamp(17px, 2.4vw, 24px);
+    }
+
+    header { position: relative; width: min(750px, 100%); text-align: center; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 9px;
+      padding: 6px 11px;
+      border: 1px solid rgba(183,255,100,.78);
+      border-radius: 999px;
+      color: var(--lime);
+      background: rgba(8,28,14,.74);
+      box-shadow: 0 0 24px rgba(158,255,64,.2), inset 0 0 17px rgba(158,255,64,.09);
+      font-size: .7rem;
+      font-weight: 900;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 10px var(--lime); }
+    h1 {
+      margin: 0;
+      color: var(--white);
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-size: clamp(3.45rem, 12vw, 7rem);
+      font-weight: 900;
+      line-height: .74;
+      letter-spacing: -.055em;
+      text-transform: uppercase;
+      text-shadow: 4px 4px 0 #155724, 8px 8px 0 rgba(0,0,0,.24), 0 0 28px rgba(183,255,100,.35);
+    }
+    h1 span { color: var(--lime); text-shadow: 4px 4px 0 #2d1164, 0 0 24px rgba(183,255,100,.5); }
+    .ghost-mode {
+      display: inline-block;
+      margin-top: 11px;
+      padding: 5px 9px;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,.88);
+      background: linear-gradient(110deg, #51217e, #a766ff);
+      box-shadow: 4px 4px 0 #190c2f, 0 0 20px rgba(167,102,255,.52);
+      font-size: .78rem;
+      font-weight: 1000;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      transform: rotate(-2deg);
+    }
+    .subtitle {
+      max-width: 56ch;
+      margin: 17px auto 0;
+      color: rgba(255,253,242,.72);
+      font-size: .91rem;
+      line-height: 1.55;
+    }
+
+    .wheel-zone {
+      position: relative;
+      width: min(86vw, 625px);
+      aspect-ratio: 1;
+      isolation: isolate;
+    }
+    .wheel-aura {
+      position: absolute;
+      inset: 4%;
+      z-index: -1;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, rgba(183,255,100,.88), rgba(167,102,255,.9), rgba(70,200,90,.78), rgba(255,78,104,.68), rgba(183,255,100,.88));
+      filter: blur(24px);
+      opacity: .67;
+      animation: aura 6.5s linear infinite;
+    }
+    @keyframes aura { to { transform: rotate(1turn) scale(1.06); } }
+    .ghost-ring {
+      position: absolute;
+      inset: -4.2%;
+      z-index: -1;
+      border-radius: 50%;
+      border: 1px dashed rgba(183,255,100,.48);
+      animation: orbit 14s linear infinite;
+    }
+    .ghost-ring::before, .ghost-ring::after {
+      content: "👻";
+      position: absolute;
+      color: var(--white);
+      font-size: clamp(22px, 4vw, 33px);
+      filter: drop-shadow(0 0 8px rgba(183,255,100,.65));
+    }
+    .ghost-ring::before { left: 4%; top: 23%; }
+    .ghost-ring::after { right: 4%; bottom: 23%; transform: rotate(180deg); }
+    @keyframes orbit { to { transform: rotate(1turn); } }
+
+    .pointer {
+      position: absolute;
+      top: -2%;
+      left: 50%;
+      z-index: 5;
+      width: 0;
+      height: 0;
+      transform: translateX(-50%);
+      border-right: clamp(18px, 3.6vw, 27px) solid transparent;
+      border-left: clamp(18px, 3.6vw, 27px) solid transparent;
+      border-top: clamp(38px, 7vw, 57px) solid var(--lime);
+      filter: drop-shadow(0 4px 0 #061009) drop-shadow(0 0 11px rgba(183,255,100,.95));
+    }
+    .pointer::after {
+      content: "";
+      position: absolute;
+      top: -57px;
+      left: -5px;
+      width: 10px;
+      height: 13px;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      background: var(--purple);
+    }
+
+    .wheel-frame {
+      position: absolute;
+      inset: 0;
+      padding: clamp(8px, 1.2vw, 11px);
+      overflow: hidden;
+      border: 3px solid var(--white);
+      border-radius: 50%;
+      background: #061009;
+      box-shadow:
+        0 0 0 5px #0d3d1b,
+        0 0 0 8px rgba(183,255,100,.78),
+        0 0 0 12px rgba(6,16,9,.9),
+        0 22px 48px rgba(0,0,0,.62),
+        0 0 50px rgba(183,255,100,.31);
+    }
+    #wheel {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 50%;
+      transform: rotate(0deg);
+      transition: transform 4.5s cubic-bezier(.08,.71,.08,1);
+      will-change: transform;
+      background: #0e3117;
+    }
+    #wheel.spinning { pointer-events: none; }
+
+    .center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 4;
+      display: grid;
+      width: 29%;
+      aspect-ratio: 1;
+      place-items: center;
+      padding: 0;
+      border: 5px solid #07150c;
+      border-radius: 50%;
+      color: #07150c;
+      background: radial-gradient(circle at 34% 28%, #efffd2 0 5%, var(--lime) 25%, #68d743 66%, #2ba046 100%);
+      box-shadow: 0 0 0 4px var(--white), 0 0 0 8px #51217e, 0 0 31px rgba(183,255,100,.9), inset 0 -10px rgba(17,89,30,.26);
+      cursor: pointer;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-size: clamp(1.25rem, 4vw, 2.3rem);
+      font-weight: 900;
+      letter-spacing: .03em;
+      line-height: .77;
+      text-align: center;
+      text-shadow: 1px 1px 0 rgba(255,255,255,.6);
+      transition: transform .18s ease, filter .18s ease;
+    }
+    .center:hover { transform: translate(-50%, -50%) scale(1.07) rotate(-3deg); filter: saturate(1.25) brightness(1.06); }
+    .center:active { transform: translate(-50%, -50%) scale(.95); }
+    .center:disabled { cursor: wait; opacity: .78; }
+    .center .tiny { display: block; margin-top: 3px; font-family: ui-sans-serif, system-ui, sans-serif; font-size: clamp(.48rem, 1.2vw, .65rem); font-weight: 1000; letter-spacing: .11em; }
+
+    .result {
+      position: relative;
+      width: min(700px, 100%);
+      min-height: 160px;
+      padding: 18px 20px;
+      overflow: hidden;
+      border: 1px solid rgba(183,255,100,.55);
+      border-radius: 17px;
+      background: linear-gradient(130deg, rgba(9,33,15,.9), rgba(12,17,21,.88));
+      box-shadow: 0 14px 38px rgba(0,0,0,.35), inset 0 1px rgba(255,255,255,.07);
+      text-align: center;
+    }
+    .result::before {
+      content: "👻";
+      position: absolute;
+      left: 4%;
+      bottom: -22px;
+      opacity: .11;
+      font-size: 8rem;
+      transform: rotate(-10deg);
+    }
+    .result::after {
+      content: "GHOST MODE";
+      position: absolute;
+      top: 9px;
+      right: 12px;
+      opacity: .12;
+      color: var(--lime);
+      font-size: .65rem;
+      font-weight: 1000;
+      letter-spacing: .15em;
+    }
+    .kicker { min-height: 1.1em; color: var(--lime); font-size: .72rem; font-weight: 1000; letter-spacing: .16em; text-transform: uppercase; }
+    .result h2 { min-height: 1.1em; margin: 8px 0 0; font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif; font-size: clamp(2rem, 7vw, 3.25rem); line-height: .88; letter-spacing: -.025em; text-transform: uppercase; text-shadow: 3px 3px 0 #21562a; }
+    .result p { min-height: 2.5em; max-width: 55ch; margin: 11px auto 0; color: rgba(255,253,242,.87); font-size: .92rem; line-height: 1.48; }
+    .result p b { color: var(--lime); }
+
+    .actions { display: flex; justify-content: center; gap: 9px; flex-wrap: wrap; }
+    .action {
+      display: none;
+      padding: 10px 14px;
+      border: 1px solid rgba(255,255,255,.8);
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: .77rem;
+      font-weight: 1000;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      transition: transform .14s ease, filter .14s ease;
+    }
+    .action.show { display: inline-flex; align-items: center; justify-content: center; }
+    .action:hover { transform: translateY(-2px); filter: brightness(1.12); }
+    .action.next { color: #07150c; background: var(--lime); box-shadow: 4px 4px 0 #1c7031; }
+    .note { width: min(700px, 100%); margin: 0; color: rgba(255,253,242,.58); font-size: .74rem; line-height: 1.45; text-align: center; }
+    .note b { color: var(--lime); }
+
+    @media (max-width: 610px) {
+      .app { align-content: start; }
+      .wheel-zone { width: min(93vw, 570px); }
+      .subtitle { margin-top: 14px; font-size: .84rem; }
+      .result { min-height: 151px; padding: 17px 14px; }
+      .ghost.g1, .ghost.g2 { opacity: .08; }
+      .ghost.g3, .ghost.g4 { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="smoke one" aria-hidden="true"></div>
+  <div class="smoke two" aria-hidden="true"></div>
+  <div class="smoke three" aria-hidden="true"></div>
+
+  <!-- Ghosts stay in the background: smoke wheel first, gimmicks second. -->
+  <svg class="ghost g1" viewBox="0 0 120 160" aria-hidden="true"><path fill="#dfffe2" d="M20 148V59C20 29 37 13 60 13s40 16 40 46v89l-13-12-13 12-14-12-14 12-13-12z"/><circle cx="46" cy="62" r="6" fill="#07150c"/><circle cx="75" cy="62" r="6" fill="#07150c"/><path d="M47 88q13 11 27 0" fill="none" stroke="#07150c" stroke-width="6" stroke-linecap="round"/></svg>
+  <svg class="ghost g2" viewBox="0 0 120 160" aria-hidden="true"><path fill="#b7ff64" d="M20 148V59C20 29 37 13 60 13s40 16 40 46v89l-13-12-13 12-14-12-14 12-13-12z"/><circle cx="46" cy="62" r="6" fill="#07150c"/><circle cx="75" cy="62" r="6" fill="#07150c"/><path d="M47 88q13 11 27 0" fill="none" stroke="#07150c" stroke-width="6" stroke-linecap="round"/></svg>
+  <svg class="ghost g3" viewBox="0 0 120 160" aria-hidden="true"><path fill="#a766ff" d="M20 148V59C20 29 37 13 60 13s40 16 40 46v89l-13-12-13 12-14-12-14 12-13-12z"/><circle cx="46" cy="62" r="6" fill="#fff"/><circle cx="75" cy="62" r="6" fill="#fff"/><path d="M47 88q13 11 27 0" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/></svg>
+  <svg class="ghost g4" viewBox="0 0 120 160" aria-hidden="true"><path fill="#dfffe2" d="M20 148V59C20 29 37 13 60 13s40 16 40 46v89l-13-12-13 12-14-12-14 12-13-12z"/><circle cx="46" cy="62" r="6" fill="#07150c"/><circle cx="75" cy="62" r="6" fill="#07150c"/><path d="M47 88q13 11 27 0" fill="none" stroke="#07150c" stroke-width="6" stroke-linecap="round"/></svg>
+
+  <main class="app">
+    <header>
+      <div class="eyebrow"><span class="dot"></span> PASS THE VIBE · GHOST THE NIGHT</div>
+      <h1>Wheel <span>of</span> Weed</h1>
+      <div class="ghost-mode">👻 Ghost Mode</div>
+      <p class="subtitle">Ghost-only hard mode: 4G is de instap. 2FG en Ghost Duel zijn specials. Vanaf 8G wordt het hard — GA is het eindvak.</p>
+    </header>
+
+    <section class="wheel-zone" aria-label="Wheel of Weed ghost mode">
+      <div class="wheel-aura" aria-hidden="true"></div>
+      <div class="ghost-ring" aria-hidden="true"></div>
+      <div class="pointer" aria-hidden="true"></div>
+      <div class="wheel-frame"><svg id="wheel" viewBox="0 0 500 500" role="img" aria-label="Draaiwiel met smoke-opdrachten"></svg></div>
+      <button id="spinButton" class="center" type="button" aria-label="Draai het ghost-rad">SPIN<span class="tiny">👻 GHOST IT</span></button>
+    </section>
+
+    <section class="result" aria-live="polite">
+      <div class="kicker" id="resultKicker">GHOST MODE READY</div>
+      <h2 id="resultTitle">DRAAI HET RAD</h2>
+      <p id="resultText">4G is de ondergrens. 2FG en Ghost Duel zijn specials. Vanaf 8G wordt het zwaar; GA is de moeilijkste spin.</p>
+    </section>
+
+    <div class="actions" aria-live="polite">
+      <button class="action next" id="nextButton" type="button">Volgende spin</button>
+    </div>
+
+    <p class="note"><b>House vibe:</b> jullie eigen regels blijven leidend. Geen druk, geen rijden onder invloed en een pass is altijd gewoon een pass.</p>
+  </main>
+
+  <script>
+    // Ghost-only hard mode: 4G is de instap. 8G en hoger zijn de moeilijke vakken.
+    // 2FG en Ghost Duel zijn nieuwe specials. FGA is de French Ghost Attempt-special.
+    // GA blijft bewust het zeldzame eindvak. Pas alleen short/title/text aan voor eigen inside-jokes.
+    const challenges = [
+      { short: '4G', title: '4 GHOSTS', text: 'De instap van dit rad: <b>4 Ghosts</b> volgens jullie eigen regels.' },
+      { short: '5G', title: '5 GHOSTS', text: 'Een stap harder: <b>5 Ghosts</b>.' },
+      { short: '6G', title: '6 GHOSTS', text: 'De laatste normale zone: <b>6 Ghosts</b>.' },
+      { short: 'FG', title: 'FRENCH GHOST', text: 'Special vak: <b>French Ghost</b>.' },
+      { short: '2FG', title: '2 FRENCH GHOSTS', text: '<b>Double French Ghost:</b> twee French Ghosts volgens jullie eigen regels.' },
+      { short: 'GD', title: 'GHOST DUEL', text: '<b>Ghost Duel:</b> kies één speler; jullie doen allebei dezelfde ghost-challenge volgens jullie regels.' },
+      { short: '6G', title: '6 GHOSTS', text: 'Nog een <b>6 Ghosts</b>-vak. Ghost mode blijft aan.' },
+      { short: 'FGA', title: 'FRENCH GHOST ATTEMPT', text: '<b>French Ghost Attempt:</b> de hardere French-special van het rad.' },
+      { short: '8G', title: '8 GHOSTS', text: '<b>Hard mode begint hier.</b> 8 Ghosts.' },
+      { short: '8G', title: '8 GHOSTS', text: 'Nog een <b>8 Ghosts</b>-vak. Vanaf hier is het serieuze ghost-zone.' },
+      { short: '10G', title: '10 GHOSTS', text: '<b>Heavy ghost zone:</b> 10 Ghosts.' },
+      { short: 'GA', title: 'GHOST ATTEMPT', text: '<b>HARDSTE VAK VAN HET RAD.</b> Ghost Attempt — alleen als jullie er zelf voor kiezen.' }
+    ];
+
+    const palette = ['#49c95d', '#fffdf2', '#2cab4a', '#e9ffd7', '#a766ff', '#b7ff64', '#4ec85e', '#d7f4d7', '#329b45', '#eeffe1', '#ff7a4e', '#51217e'];
+    const wheel = document.querySelector('#wheel');
+    const spinButton = document.querySelector('#spinButton');
+    const nextButton = document.querySelector('#nextButton');
+    const resultKicker = document.querySelector('#resultKicker');
+    const resultTitle = document.querySelector('#resultTitle');
+    const resultText = document.querySelector('#resultText');
+
+    let rotation = 0;
+    let spinning = false;
+
+    function polar(angle, radius = 246) {
+      const radians = (angle - 90) * Math.PI / 180;
+      return [250 + radius * Math.cos(radians), 250 + radius * Math.sin(radians)];
+    }
+
+    function esc(value) {
+      return String(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[char]));
+    }
+
+    function renderWheel() {
+      const step = 360 / challenges.length;
+      const pieces = [];
+      challenges.forEach((challenge, index) => {
+        const start = index * step;
+        const end = start + step;
+        const mid = start + step / 2;
+        const [x1, y1] = polar(start);
+        const [x2, y2] = polar(end);
+        const [tx, ty] = polar(mid, 165);
+        const rotateText = mid > 90 && mid < 270 ? mid + 180 : mid;
+        const fill = palette[index];
+        const darkText = index % 2 === 1;
+        pieces.push(`
+          <path d="M250 250 L${x1.toFixed(2)} ${y1.toFixed(2)} A246 246 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z" fill="${fill}" stroke="#0b2c15" stroke-width="2.6" />
+          <path d="M250 250 L${x1.toFixed(2)} ${y1.toFixed(2)} A246 246 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z" fill="url(#grain)" opacity=".23" />
+          <text x="${tx.toFixed(2)}" y="${ty.toFixed(2)}" fill="${darkText ? '#092311' : '#fffdf2'}" font-family="Impact, Arial Black, sans-serif" font-size="22" text-anchor="middle" dominant-baseline="middle" transform="rotate(${rotateText.toFixed(2)} ${tx.toFixed(2)} ${ty.toFixed(2)})" style="letter-spacing:.7px;paint-order:stroke;stroke:${darkText ? 'rgba(255,255,255,.62)' : 'rgba(9,35,17,.8)'};stroke-width:1.3px">${esc(challenge.short)}</text>
+        `);
+      });
+      pieces.unshift(`
+        <defs>
+          <filter id="texture"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .22"/></feComponentTransfer></filter>
+          <pattern id="grain" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" filter="url(#texture)"/></pattern>
+        </defs>
+      `);
+      pieces.push('<circle cx="250" cy="250" r="247" fill="none" stroke="#04120a" stroke-width="7"/><circle cx="250" cy="250" r="232" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1"/>');
+      wheel.innerHTML = pieces.join('');
+    }
+
+    function showChallenge(index) {
+      const challenge = challenges[index];
+      resultKicker.textContent = `SMOKE RESULT · ${challenge.short}`;
+      resultTitle.textContent = challenge.title;
+      resultText.innerHTML = challenge.text;
+      nextButton.classList.add('show');
+    }
+
+    function spin() {
+      if (spinning) return;
+      spinning = true;
+      spinButton.disabled = true;
+      spinButton.innerHTML = 'GHOST<span class="tiny">SPINNING...</span>';
+      nextButton.classList.remove('show');
+      resultKicker.textContent = 'SMOKE CLOUD INCOMING';
+      resultTitle.textContent = 'WHO GETS GHOSTED?';
+      resultText.textContent = 'Het rad draait. De ghosts beslissen.';
+
+      const step = 360 / challenges.length;
+      const picked = Math.floor(Math.random() * challenges.length);
+      const segmentCenter = picked * step + step / 2;
+      const target = (360 - segmentCenter + 360) % 360;
+      const current = ((rotation % 360) + 360) % 360;
+      rotation += 360 * (7 + Math.floor(Math.random() * 3)) + ((target - current + 360) % 360);
+      wheel.classList.add('spinning');
+      wheel.style.transform = `rotate(${rotation}deg)`;
+
+      window.setTimeout(() => {
+        wheel.classList.remove('spinning');
+        spinButton.disabled = false;
+        spinButton.innerHTML = 'SPIN<span class="tiny">👻 GHOST IT</span>';
+        spinning = false;
+        showChallenge(picked);
+      }, 4500);
+    }
+
+    spinButton.addEventListener('click', spin);
+    nextButton.addEventListener('click', spin);
+    renderWheel();
+  </script>
+</body>
+</html>
